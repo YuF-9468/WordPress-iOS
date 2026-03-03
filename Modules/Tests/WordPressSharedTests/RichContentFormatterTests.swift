@@ -56,6 +56,48 @@ class RichContentFormatterTests: XCTestCase {
         XCTAssertTrue(range.location != NSNotFound)
     }
 
+    // MARK: - Emoji / Multi-byte Character Tests
+    //
+    // These tests verify that string operations work correctly with emoji
+    // and other characters where String.count (grapheme clusters) differs
+    // from String.utf16.count (UTF-16 code units used by NSRange).
+    // The family emoji 👨‍👩‍👧‍👦 is 1 grapheme cluster but 11 UTF-16 code units.
+
+    func testRemoveForbiddenTagsWithEmoji() {
+        let input = "<p>Hello 👨‍👩‍👧‍👦👨‍👩‍👧‍👦 World</p><script>evil</script>"
+        let expected = "<p>Hello 👨‍👩‍👧‍👦👨‍👩‍👧‍👦 World</p>"
+        let result = RichContentFormatter.removeForbiddenTags(input)
+        XCTAssertEqual(result, expected, "Script tags after emoji should be removed")
+    }
+
+    func testRemoveInlineStylesWithEmoji() {
+        let input = "<p>Hello 👨‍👩‍👧‍👦👨‍👩‍👧‍👦</p><p style=\"color:red;\">test</p>"
+        let expected = "<p>Hello 👨‍👩‍👧‍👦👨‍👩‍👧‍👦</p><p>test</p>"
+        let result = RichContentFormatter.removeInlineStyles(input)
+        XCTAssertEqual(result, expected, "Inline styles after emoji should be removed")
+    }
+
+    func testNormalizeParagraphsWithEmoji() {
+        let input = "<div>Hello 👨‍👩‍👧‍👦👨‍👩‍👧‍👦</div><div>test</div>"
+        let expected = "<p>Hello 👨‍👩‍👧‍👦👨‍👩‍👧‍👦</p><p>test</p>"
+        let result = RichContentFormatter.normalizeParagraphs(input)
+        XCTAssertEqual(result, expected, "Div-to-p conversion after emoji should work")
+    }
+
+    func testFilterNewLinesWithEmoji() {
+        let input = "<p>Hello 👨‍👩‍👧‍👦👨‍👩‍👧‍👦</p>\n<p>World</p>\n"
+        let expected = "<p>Hello 👨‍👩‍👧‍👦👨‍👩‍👧‍👦</p><p>World</p>"
+        let result = RichContentFormatter.filterNewLines(input)
+        XCTAssertEqual(result, expected, "Newlines after emoji should be filtered")
+    }
+
+    func testRemoveTrailingBreakTagsWithEmoji() {
+        let input = "<p>Hello 👨‍👩‍👧‍👦👨‍👩‍👧‍👦 World</p><br><br> "
+        let expected = "<p>Hello 👨‍👩‍👧‍👦👨‍👩‍👧‍👦 World</p>"
+        let result = RichContentFormatter.removeTrailingBreakTags(input)
+        XCTAssertEqual(result, expected, "Trailing BR tags after emoji should be removed")
+    }
+
     func testFormatVideoTags() {
         let str1 = "<p>Some text.</p><video></video><p>Some text.</p>"
         let sanitizedStr1 = RichContentFormatter.formatVideoTags(str1) as NSString

@@ -288,9 +288,8 @@ import WordPressSharedObjC
 
         var content = string.trim()
         let matches = RegEx.trailingBRTags.matches(in: content, options: .reportCompletion, range: NSRange(location: 0, length: content.utf16.count))
-        if let match = matches.first {
-            let index = content.index(content.startIndex, offsetBy: match.range.location)
-            content = String(content.prefix(upTo: index))
+        if let match = matches.first, let range = Range(match.range, in: content) {
+            content = String(content[content.startIndex..<range.lowerBound])
         }
 
         return content
