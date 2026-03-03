@@ -1,6 +1,7 @@
 import UIKit
 import SafariServices
 import WordPressData
+import WordPressUI
 
 // […]
 final class ReaderReadMoreView: UIView, UIAdaptivePresentationControllerDelegate, UIPopoverPresentationControllerDelegate {
@@ -25,7 +26,7 @@ final class ReaderReadMoreView: UIView, UIAdaptivePresentationControllerDelegate
             .font: UIFont.preferredFont(forTextStyle: .body)
         ])
         if let postURL = post.permaLink.flatMap(URL.init) {
-            string.addAttribute(.link, value: postURL, range: NSRange(location: 0, length: string.length))
+            string.applyAttribute(.link, value: postURL)
             self.postURL = postURL
         }
         textView.attributedText = string
