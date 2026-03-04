@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import Foundation
 import UIKit
 
@@ -102,3 +103,4 @@ open class HTTPAuthenticationAlertController {
     }
 
 }
+#endif

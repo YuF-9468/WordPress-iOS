@@ -1,4 +1,9 @@
 import Foundation
+#if canImport(AppKit)
+import AppKit
+#elseif canImport(UIKit)
+import UIKit
+#endif
 
 public struct PluginDirectoryEntry {
     public let name: String
@@ -17,7 +22,7 @@ public struct PluginDirectoryEntry {
     let faqHTML: String?
     let changelogHTML: String?
 
-    public var descriptionText: NSAttributedString? {
+        public var descriptionText: NSAttributedString? {
         return extractHTMLText(self.descriptionHTML)
     }
     public var installationText: NSAttributedString? {
