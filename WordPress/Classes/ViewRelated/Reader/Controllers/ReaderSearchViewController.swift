@@ -46,6 +46,9 @@ final class ReaderSearchViewController: UIViewController {
 
     var isStandaloneAppModeEnabled = false
 
+    /// Tracking context for structured screen analytics.
+    var trackingContext = ScreenTrackingContext()
+
     public override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -65,6 +68,7 @@ final class ReaderSearchViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        WPAnalytics.trackScreen(ReaderScreen.search, context: trackingContext)
 
         if isFirstAppearance {
             isFirstAppearance = false
@@ -165,6 +169,9 @@ final class ReaderSearchViewController: UIViewController {
             return
         }
         let postSearchVC = ReaderStreamViewController.controllerWithTopic(topic)
+        postSearchVC.trackingContext = trackingContext
+            .appending(ReaderScreen.search, trigger: ScreenTrackingTrigger(component: ReaderTriggerComponent.searchResult))
+        postSearchVC.suppressesScreenTracking = true
         showChild(postSearchVC)
         postsResulsViewContoller = postSearchVC
 

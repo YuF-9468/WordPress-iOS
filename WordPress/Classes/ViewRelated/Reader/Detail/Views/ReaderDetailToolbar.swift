@@ -208,7 +208,9 @@ class ReaderDetailToolbar {
             return
         }
 
-        ReaderCommentAction().execute(post: post, origin: viewController, source: .postDetails)
+        let trackingContext = (viewController as? ReaderDetailViewController)?.trackingContext
+            .appending(ReaderScreen.article, trigger: ScreenTrackingTrigger(component: ReaderTriggerComponent.toolbar, action: ReaderTriggerAction.tapComment))
+        ReaderCommentAction().execute(post: post, origin: viewController, source: .postDetails, trackingContext: trackingContext)
     }
 
     @objc private func didTapLike(_ sender: Any) {

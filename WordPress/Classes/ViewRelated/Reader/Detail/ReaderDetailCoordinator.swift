@@ -267,6 +267,10 @@ class ReaderDetailCoordinator {
 
         if let blogID = sourceAttribution.blogID {
             let controller = ReaderStreamViewController.controllerWithSiteID(blogID, isFeed: false)
+            if let detailVC = viewController as? ReaderDetailViewController {
+                controller.trackingContext = detailVC.trackingContext
+                    .appending(ReaderScreen.article, trigger: ScreenTrackingTrigger(component: ReaderTriggerComponent.articleHeader, action: ReaderTriggerAction.tapSiteName))
+            }
             viewController?.navigationController?.pushViewController(controller, animated: true)
             return
         }
@@ -428,6 +432,10 @@ class ReaderDetailCoordinator {
         }
 
         let controller = ReaderStreamViewController.controllerWithSiteID(siteID, isFeed: post.isExternal)
+        if let detailVC = viewController as? ReaderDetailViewController {
+            controller.trackingContext = detailVC.trackingContext
+                .appending(ReaderScreen.article, trigger: ScreenTrackingTrigger(component: ReaderTriggerComponent.articleHeader, action: ReaderTriggerAction.tapSiteName))
+        }
         viewController?.navigationController?.pushViewController(controller, animated: true)
 
         let properties = ReaderHelpers.statsPropertiesForPost(post, andValue: post.blogURL as AnyObject?, forKey: "URL")
@@ -436,6 +444,10 @@ class ReaderDetailCoordinator {
 
     private func showTopic(_ topic: String) {
         let controller = ReaderStreamViewController.controllerWithTagSlug(topic)
+        if let detailVC = viewController as? ReaderDetailViewController {
+            controller.trackingContext = detailVC.trackingContext
+                .appending(ReaderScreen.article, trigger: ScreenTrackingTrigger(component: ReaderTriggerComponent.tagChip, action: ReaderTriggerAction.tapTag))
+        }
         viewController?.navigationController?.pushViewController(controller, animated: true)
     }
 
@@ -452,6 +464,10 @@ class ReaderDetailCoordinator {
         }
 
         let controller = ReaderStreamViewController.controllerWithTagSlug(primaryTagSlug)
+        if let detailVC = viewController as? ReaderDetailViewController {
+            controller.trackingContext = detailVC.trackingContext
+                .appending(ReaderScreen.article, trigger: ScreenTrackingTrigger(component: ReaderTriggerComponent.tagChip, action: ReaderTriggerAction.tapTag))
+        }
         viewController?.navigationController?.pushViewController(controller, animated: true)
 
         let properties = ReaderHelpers.statsPropertiesForPost(post, andValue: post.primaryTagSlug as AnyObject?, forKey: "tag")

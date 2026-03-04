@@ -89,7 +89,15 @@ final class ReaderPostCellViewModel {
 
     func showSiteDetails() {
         guard let viewController else { return }
-        ReaderHeaderAction().execute(post: post, origin: viewController)
+        let screen = viewController.resolveReaderScreen()
+        ReaderHeaderAction().execute(
+            post: post,
+            origin: viewController,
+            trackingContext: screen.map {
+                viewController.resolvedTrackingContext()
+                    .appending($0, trigger: ScreenTrackingTrigger(component: ReaderTriggerComponent.postHeader, action: ReaderTriggerAction.tapSiteName))
+            }
+        )
     }
 
     func toogleBookmark() {
@@ -104,7 +112,16 @@ final class ReaderPostCellViewModel {
 
     func comment() {
         guard let viewController else { return }
-        ReaderCommentAction().execute(post: post, origin: viewController, source: .postCard)
+        let screen = viewController.resolveReaderScreen()
+        ReaderCommentAction().execute(
+            post: post,
+            origin: viewController,
+            source: .postCard,
+            trackingContext: screen.map {
+                viewController.resolvedTrackingContext()
+                    .appending($0, trigger: ScreenTrackingTrigger(component: ReaderTriggerComponent.postCard, action: ReaderTriggerAction.tapComment))
+            }
+        )
     }
 
     func toggleLike() {

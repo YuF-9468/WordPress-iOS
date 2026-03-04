@@ -89,22 +89,43 @@ public final class ReaderPresenter: NSObject, SplitViewDisplayable {
     }
 
     private func configure(for selection: ReaderSidebarItem) {
+        let trackingContext = ScreenTrackingContext()
+            .appending(ReaderScreen.sidebar, trigger: ScreenTrackingTrigger(component: ReaderTriggerComponent.sidebar))
+
         switch selection {
         case .main(let screen):
-            show(makeViewController(for: screen))
+            let vc = makeViewController(for: screen)
+            setTrackingContext(trackingContext, on: vc)
+            show(vc)
         case .allSubscriptions:
             show(makeAllSubscriptionsViewController(), isLargeTitle: true)
         case .subscription(let objectID):
-            show(makeViewController(withTopicID: objectID))
+            let vc = makeViewController(withTopicID: objectID)
+            setTrackingContext(trackingContext, on: vc)
+            show(vc)
         case .list(let objectID):
-            show(makeViewController(withTopicID: objectID))
+            let vc = makeViewController(withTopicID: objectID)
+            setTrackingContext(trackingContext, on: vc)
+            show(vc)
         case .tag(let objectID):
-            show(makeViewController(withTopicID: objectID))
+            let vc = makeViewController(withTopicID: objectID)
+            setTrackingContext(trackingContext, on: vc)
+            show(vc)
         case .organization(let objectID):
-            show(makeViewController(withTopicID: objectID))
+            let vc = makeViewController(withTopicID: objectID)
+            setTrackingContext(trackingContext, on: vc)
+            show(vc)
         }
 
         hideSupplementaryColumnIfNeeded()
+    }
+
+    private func setTrackingContext(_ context: ScreenTrackingContext, on viewController: UIViewController) {
+        if let streamVC = viewController as? ReaderStreamViewController {
+            streamVC.trackingContext = context
+        } else if let discoverVC = viewController as? ReaderDiscoverViewController {
+            discoverVC.trackingContext = context
+        }
     }
 
     private func popMainNavigationController(in splitViewController: UISplitViewController) {

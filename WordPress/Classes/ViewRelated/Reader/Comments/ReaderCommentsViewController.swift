@@ -28,6 +28,8 @@ final class ReaderCommentsViewController: UIViewController, WPContentSyncHelperD
     var navigateToCommentID: NSNumber?
     var allowsPushingPostDetails = false
 
+    var trackingContext = ScreenTrackingContext()
+
     private var post: ReaderPost?
     private var postID: NSNumber?
     private var siteID: NSNumber?
@@ -81,6 +83,11 @@ final class ReaderCommentsViewController: UIViewController, WPContentSyncHelperD
         }
 
         trackCommentsOpened()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        WPAnalytics.trackScreen(ReaderScreen.comments, context: trackingContext)
     }
 
     override func viewWillAppear(_ animated: Bool) {

@@ -186,8 +186,15 @@ import AutomatticTracks
     private var showConfirmation = true
 
     var isEmbeddedInDiscover = false
+    var suppressesScreenTracking = false
     var isNotificationsBarButtonEnabled = false
     var preferredTableHeaderView: UIView?
+
+    /// Tracking context for structured screen analytics.
+    var trackingContext = ScreenTrackingContext()
+
+    /// The discover channel this stream is displayed in, if any.
+    var discoverChannel: ReaderDiscoverChannel?
 
     var isCompact = true {
         didSet {
@@ -329,6 +336,10 @@ import AutomatticTracks
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+        if !suppressesScreenTracking, let screen = resolveReaderScreen() {
+            WPAnalytics.trackScreen(screen, context: resolvedTrackingContext())
+        }
 
         let mainContext = ContextManager.shared.mainContext
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.NSManagedObjectContextDidSave, object: mainContext)
@@ -766,6 +777,42 @@ import AutomatticTracks
 
         didBumpStats = true
         ReaderHelpers.trackLoadedTopic(topic, withProperties: properties)
+    }
+
+    /// Maps the current topic/content type to a `ReaderScreen` identifier.
+    func resolveReaderScreen() -> ReaderScreen? {
+        if contentType == .saved {
+            return .saved
+        }
+        guard let topic = readerTopic else {
+            return nil
+        }
+        if ReaderHelpers.topicIsDiscover(topic) {
+            return .discover
+        } else if ReaderHelpers.topicIsFollowing(topic) {
+            return .following
+        } else if ReaderHelpers.topicIsLiked(topic) {
+            return .likes
+        } else if ReaderHelpers.isTopicSite(topic) {
+            return .site
+        } else if ReaderHelpers.isTopicTag(topic) {
+            return .tag
+        } else if ReaderHelpers.isTopicList(topic) {
+            return .list
+        } else if topic is ReaderTeamTopic {
+            return .organization
+        }
+        return nil
+    }
+
+    /// Returns the tracking context enriched with screen-level properties
+    /// (e.g. the active discover tab).
+    func resolvedTrackingContext() -> ScreenTrackingContext {
+        var context = trackingContext
+        if let discoverChannel {
+            context.userInfo["discover_tab"] = discoverChannel.analyticsID
+        }
+        return context
     }
 
     // MARK: - Sync Methods
@@ -1437,6 +1484,11 @@ extension ReaderStreamViewController: WPTableViewHandlerDelegate {
 
         let controller = ReaderDetailViewController.controllerWithPost(post)
         controller.coordinator?.readerTopic = readerTopic
+
+        if let screen = resolveReaderScreen() {
+            controller.trackingContext = resolvedTrackingContext()
+                .appending(screen, trigger: ScreenTrackingTrigger(component: ReaderTriggerComponent.postCard, position: indexPath.row))
+        }
 
         if post.isSavedForLater || contentType == .saved {
             trackSavedPostNavigation()

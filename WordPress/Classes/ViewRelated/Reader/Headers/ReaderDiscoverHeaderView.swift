@@ -208,7 +208,7 @@ enum ReaderDiscoverChannel: Hashable {
         return properties
     }
 
-    private var analyticsID: String {
+    var analyticsID: String {
         switch self {
         case .freshlyPresed: "freshly_presed"
         case .recommended: "recommended"
@@ -218,6 +218,7 @@ enum ReaderDiscoverChannel: Hashable {
         case .tag: "tag"
         }
     }
+
 }
 
 #Preview {

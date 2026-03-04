@@ -7,12 +7,16 @@ final class ReaderCommentAction {
         post: ReaderPost,
         origin: UIViewController,
         navigateToCommentID: Int? = nil,
-        source: ReaderCommentsSource
+        source: ReaderCommentsSource,
+        trackingContext: ScreenTrackingContext? = nil
     ) {
         let commentsVC = ReaderCommentsViewController(post: post)
         commentsVC.source = source
         commentsVC.navigateToCommentID = navigateToCommentID as NSNumber?
         commentsVC.hidesBottomBarWhenPushed = true
+        if let trackingContext {
+            commentsVC.trackingContext = trackingContext
+        }
 
         if origin.traitCollection.horizontalSizeClass == .compact {
             let navigationVC = UINavigationController(rootViewController: commentsVC)

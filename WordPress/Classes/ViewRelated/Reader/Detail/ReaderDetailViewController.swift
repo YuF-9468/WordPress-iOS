@@ -145,6 +145,9 @@ class ReaderDetailViewController: UIViewController, ReaderDetailView {
     /// Used to disable ineffective buttons when a Related post fails to load.
     var enableRightBarButtons = true
 
+    /// Tracking context for structured screen analytics.
+    var trackingContext = ScreenTrackingContext()
+
     /// Track whether we've automatically navigated to the comments view or not.
     /// This may happen if we initialize our coordinator with a postURL that
     /// has a comment anchor fragment.
@@ -238,6 +241,11 @@ class ReaderDetailViewController: UIViewController, ReaderDetailView {
             .sink { [weak self] isHidden in
                 self?.setToolbarHidden(isHidden, animated: true)
             }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        WPAnalytics.trackScreen(ReaderScreen.article, context: trackingContext)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -369,7 +377,9 @@ class ReaderDetailViewController: UIViewController, ReaderDetailView {
                 post: post,
                 origin: self,
                 navigateToCommentID: commentID,
-                source: .postDetails
+                source: .postDetails,
+                trackingContext: trackingContext
+                    .appending(ReaderScreen.article, trigger: ScreenTrackingTrigger(component: ReaderTriggerComponent.commentsSection, action: ReaderTriggerAction.tapComment))
             )
         }
     }
@@ -1165,6 +1175,8 @@ extension ReaderDetailViewController: UITableViewDataSource, UITableViewDelegate
         guard let controller = ReaderDetailViewController.controllerWithSimplePost(post) else {
             return
         }
+        controller.trackingContext = trackingContext
+            .appending(ReaderScreen.article, trigger: ScreenTrackingTrigger(component: ReaderTriggerComponent.relatedPosts, action: ReaderTriggerAction.tapPost, position: indexPath.row))
         navigationController?.pushViewController(controller, animated: true)
     }
 
@@ -1464,7 +1476,9 @@ extension ReaderDetailViewController: BorderedButtonTableViewCellDelegate {
         ReaderCommentAction().execute(
             post: post,
             origin: self,
-            source: .postDetailsComments
+            source: .postDetailsComments,
+            trackingContext: trackingContext
+                .appending(ReaderScreen.article, trigger: ScreenTrackingTrigger(component: ReaderTriggerComponent.commentsSection, action: ReaderTriggerAction.tapComment))
         )
     }
 
