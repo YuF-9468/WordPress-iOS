@@ -5,6 +5,7 @@
 @import WordPressData;
 @import WordPressUI;
 @import WordPressShared;
+@import WordPressSharedObjC;
 
 typedef NS_ENUM(NSInteger, SharingSectionType) {
     SharingSectionUndefined = 1000,

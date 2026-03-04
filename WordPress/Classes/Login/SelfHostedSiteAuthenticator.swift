@@ -10,6 +10,7 @@ import WordPressAuthenticator
 import WordPressShared
 import BuildSettingsKit
 import SVProgressHUD
+import WordPressSharedUI
 
 struct SelfHostedSiteAuthenticator {
 

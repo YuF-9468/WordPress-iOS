@@ -11,6 +11,7 @@ import WordPressCore
 import WordPressAPI
 import WordPressKit
 import Gridicons
+import WordPressSharedUI
 
 // MARK: - WordPressAuthenticationManager
 //

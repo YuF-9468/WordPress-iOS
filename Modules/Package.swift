@@ -71,6 +71,7 @@ let package = Package(
         ]),
         .target(name: "AztecExtensions", dependencies: [
             "WordPressShared",
+            "WordPressSharedUI",
             .product(name: "Gridicons", package: "Gridicons-iOS"),
             .product(name: "Aztec", package: "AztecEditor-iOS"),
         ], swiftSettings: [.swiftLanguageMode(.v5)]),
@@ -88,6 +89,7 @@ let package = Package(
             name: "FormattableContentKit",
             dependencies: [
                 "WordPressShared",
+                "WordPressSharedUI",
                 "WordPressUI",
                 // TODO: Remove — It's here just for a NSMutableParagraphStyle init helper
                 "WordPressKit",
@@ -99,6 +101,7 @@ let package = Package(
         .target(
             name: "JetpackStats",
             dependencies: [
+                "WordPressSharedUI",
                 "WordPressUI",
                 "WordPressKit",
             ],
@@ -169,7 +172,14 @@ let package = Package(
             .product(name: "SwiftSoup", package: "SwiftSoup"),
         ]),
         .target(name: "WordPressLegacy", dependencies: ["DesignSystem", "WordPressShared"]),
-        .target(name: "WordPressSharedObjC", resources: [.process("Resources")], swiftSettings: [.swiftLanguageMode(.v5)]),
+        .target(name: "WordPressSharedObjC", swiftSettings: [.swiftLanguageMode(.v5)]),
+        .target(
+            name: "WordPressSharedObjCUI",
+            dependencies: ["WordPressSharedObjC"],
+            publicHeadersPath: "include",
+            resources: [.process("Resources")],
+            swiftSettings: [.swiftLanguageMode(.v5)]
+        ),
         .target(
             name: "WordPressShared",
             dependencies: [
@@ -179,6 +189,14 @@ let package = Package(
                 .target(name: "WordPressSharedObjC"),
             ],
             resources: [.process("Resources")],
+            swiftSettings: [.swiftLanguageMode(.v5)]
+        ),
+        .target(
+            name: "WordPressSharedUI",
+            dependencies: [
+                "WordPressShared",
+                "WordPressSharedObjCUI",
+            ],
             swiftSettings: [.swiftLanguageMode(.v5)]
         ),
         .target(name: "WordPressTesting", resources: [.process("Resources")]),
@@ -235,7 +253,7 @@ let package = Package(
         ),
         .target(
             name: "WordPressReader",
-            dependencies: ["AsyncImageKit", "WordPressUI", "WordPressShared"],
+            dependencies: ["AsyncImageKit", "WordPressUI", "WordPressShared", "WordPressSharedUI"],
             resources: [.process("Resources")]
         ),
         .testTarget(name: "JetpackStatsTests", dependencies: ["JetpackStats"]),
@@ -298,6 +316,7 @@ enum XcodeSupport {
         let wordPresAuthentificatorDependencies: [Target.Dependency] = [
             "BuildSettingsKit",
             "WordPressShared",
+            "WordPressSharedUI",
             "WordPressUI",
             "WordPressKit",
             .product(name: "Gridicons", package: "Gridicons-iOS"),
@@ -313,6 +332,7 @@ enum XcodeSupport {
             "SFHFKeychainUtils",
             "ShareExtensionCore",
             "WordPressShared",
+            "WordPressSharedUI",
             "WordPressUI",
             "TextBundle",
             "TracksMini",
@@ -357,6 +377,8 @@ enum XcodeSupport {
             "WordPressFlux",
             "WordPressIntelligence",
             "WordPressShared",
+            "WordPressSharedUI",
+            "WordPressSharedObjCUI",
             "WordPressLegacy",
             "WordPressReader",
             "WordPressUI",
@@ -401,6 +423,7 @@ enum XcodeSupport {
             .xcodeTarget("XcodeTarget_Keystone", dependencies: keystoneDependencies),
             .xcodeTarget("XcodeTarget_WordPressTests", dependencies: testDependencies + [
                 "WordPressShared",
+                "WordPressSharedUI",
                 "WordPressUI",
                 .product(name: "Gravatar", package: "Gravatar-SDK-iOS"),
                 // Needed by WordPressData because of how linkage works...
@@ -494,6 +517,7 @@ enum XcodeSupport {
                     "FormattableContentKit",
                     "SFHFKeychainUtils",
                     "WordPressShared",
+                    "WordPressSharedUI",
                     "WordPressKit",
                     .product(name: "CocoaLumberjack", package: "CocoaLumberjack"),
                     .product(name: "CocoaLumberjackSwift", package: "CocoaLumberjack"),

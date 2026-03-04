@@ -6,6 +6,7 @@
 @import WordPressKitModels;
 
 @import WordPressShared;
+@import WordPressSharedUI;
 
 NSUInteger const WPTopLevelHierarchicalCommentsPerPage = 20;
 NSInteger const  WPNumberOfCommentsToSync = 100;

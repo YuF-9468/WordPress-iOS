@@ -1,4 +1,5 @@
 @import WordPressShared;
+@import WordPressSharedUI;
 
 #import "SharingAuthorizationHelper.h"
 #import "BlogService.h"

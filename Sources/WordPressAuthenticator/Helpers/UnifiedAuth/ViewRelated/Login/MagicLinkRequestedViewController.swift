@@ -1,6 +1,7 @@
 import UIKit
 import WordPressUI
 import WordPressShared
+import WordPressSharedUI
 
 final class MagicLinkRequestedViewController: LoginViewController {
 

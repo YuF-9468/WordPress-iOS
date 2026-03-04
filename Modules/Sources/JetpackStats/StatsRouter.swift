@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 import SafariServices
+import WordPressSharedUI
 
 @MainActor
 public protocol StatsRouterScreenFactory: AnyObject {

@@ -5,6 +5,7 @@
 @import OCMock;
 @import XCTest;
 @import WordPressShared;
+@import WordPressSharedObjC;
 @import WordPressAuthenticator;
 @import WordPressKit;
 

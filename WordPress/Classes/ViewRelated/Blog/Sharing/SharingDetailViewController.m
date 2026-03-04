@@ -4,6 +4,7 @@
 #import "WordPress-Swift.h"
 @import WordPressData;
 @import WordPressShared;
+@import WordPressSharedObjCUI;
 
 static NSString *const CellIdentifier = @"CellIdentifier";
 

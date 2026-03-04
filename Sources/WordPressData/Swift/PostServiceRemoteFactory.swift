@@ -1,6 +1,7 @@
 import Foundation
 import WordPressKit
 import WordPressShared
+import WordPressSharedUI
 
 @objc public class PostServiceRemoteFactory: NSObject {
     @objc public func forBlog(_ blog: Blog) -> PostServiceRemote? {

@@ -1,8 +1,10 @@
 #import "Blog.h"
 @import WordPressShared;
+@import WordPressSharedUI;
 #import "WordPressData-Swift.h"
 
 @import WordPressShared;
+@import WordPressSharedUI;
 @import WordPressKit;
 
 @class Comment;

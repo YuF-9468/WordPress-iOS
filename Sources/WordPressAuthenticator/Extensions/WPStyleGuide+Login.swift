@@ -1,5 +1,6 @@
 import UIKit
 import WordPressShared
+import WordPressSharedUI
 import WordPressUI
 import Gridicons
 import AuthenticationServices

@@ -1,4 +1,5 @@
 import WordPressShared
+import WordPressSharedUI
 
 open class LoginSocialErrorCell: UITableViewCell {
     private let errorTitle: String
