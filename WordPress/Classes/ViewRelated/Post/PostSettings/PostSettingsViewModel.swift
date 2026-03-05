@@ -302,13 +302,14 @@ final class PostSettingsViewModel: NSObject, ObservableObject {
     init(
         editorService: CustomPostEditorService,
         blog: Blog,
+        isStandalone: Bool = false,
         context: Context = .settings,
         preferences: UserPersistentRepository = UserDefaults.standard
     ) {
         self.details = .customPost(editorService)
         self.blog = blog
         self.capabilities = PostSettingsCapabilities(from: editorService.details)
-        self.isStandalone = false
+        self.isStandalone = isStandalone
         self.context = context
         self.preferences = preferences
         self.client = editorService.client
