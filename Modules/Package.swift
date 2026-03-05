@@ -74,7 +74,7 @@ let package = Package(
             "WordPressSharedUI",
             .product(name: "Gridicons", package: "Gridicons-iOS"),
             .product(name: "Aztec", package: "AztecEditor-iOS"),
-        ], swiftSettings: [.swiftLanguageMode(.v5)]),
+        ] as [Target.Dependency], swiftSettings: [.swiftLanguageMode(.v5)]),
         .target(name: "BuildSettingsKit"),
         .target(
             name: "DesignSystem",
@@ -94,7 +94,7 @@ let package = Package(
                 // TODO: Remove — It's here just for a NSMutableParagraphStyle init helper
                 "WordPressKit",
                 .product(name: "Gridicons", package: "Gridicons-iOS"),
-            ],
+            ] as [Target.Dependency],
             // Set to v5 to avoid @Sendable warnings and errors
             swiftSettings: [.swiftLanguageMode(.v5)]
         ),
@@ -126,7 +126,7 @@ let package = Package(
                 //       in SharedCoreDataStack.o
                 .product(name: "CocoaLumberjack", package: "CocoaLumberjack"),
                 .product(name: "CocoaLumberjackSwift", package: "CocoaLumberjack"),
-            ],
+            ] as [Target.Dependency],
             resources: [.process("Resources/Extensions.xcdatamodeld")]
         ),
         .target(
@@ -176,8 +176,8 @@ let package = Package(
         .target(
             name: "WordPressSharedObjCUI",
             dependencies: ["WordPressSharedObjC"],
-            publicHeadersPath: "include",
             resources: [.process("Resources")],
+            publicHeadersPath: "include",
             swiftSettings: [.swiftLanguageMode(.v5)]
         ),
         .target(
@@ -187,7 +187,8 @@ let package = Package(
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
                 .target(name: "SFHFKeychainUtils"),
                 .target(name: "WordPressSharedObjC"),
-            ],
+                .target(name: "WordPressSharedObjCUI"),
+            ] as [Target.Dependency],
             resources: [.process("Resources")],
             swiftSettings: [.swiftLanguageMode(.v5)]
         ),
@@ -209,7 +210,7 @@ let package = Package(
                 "WordPressLegacy",
                 .product(name: "ColorStudio", package: "color-studio"),
                 .product(name: "Reachability", package: "Reachability"),
-            ],
+            ] as [Target.Dependency],
             resources: [.process("Resources")],
             swiftSettings: [.swiftLanguageMode(.v5)]
         ),
@@ -233,11 +234,11 @@ let package = Package(
                 "wpxmlrpc",
                 "WordPressKitModels",
                 "WordPressKitObjCUtils",
-            ],
+            ] as [Target.Dependency],
             publicHeadersPath: "include",
             cSettings: [
                 .define("NS_BLOCK_ASSERTIONS", to: "1", .when(configuration: .release))
-            ],
+            ]
         ),
         .target(
             name: "WordPressKit",
@@ -248,7 +249,7 @@ let package = Package(
                 "NSObject-SafeExpectations",
                 "WordPressShared",
                 "wpxmlrpc",
-            ],
+            ] as [Target.Dependency],
             swiftSettings: [.swiftLanguageMode(.v5)]
         ),
         .target(
@@ -270,9 +271,9 @@ let package = Package(
             .target(name: "WordPressTesting"),
             .product(name: "OHHTTPStubsSwift", package: "OHHTTPStubs")
         ]),
-        .testTarget(name: "WordPressSharedTests", dependencies: [.target(name: "WordPressShared")], swiftSettings: [.swiftLanguageMode(.v5)]),
-        .testTarget(name: "WordPressSharedObjCTests", dependencies: [.target(name: "WordPressShared"), .target(name: "WordPressTesting")], swiftSettings: [.swiftLanguageMode(.v5)]),
-        .testTarget(name: "WordPressUIUnitTests", dependencies: [.target(name: "WordPressUI")], swiftSettings: [.swiftLanguageMode(.v5)]),
+        .testTarget(name: "WordPressSharedTests", dependencies: [.target(name: "WordPressShared"), .target(name: "WordPressSharedUI")], swiftSettings: [.swiftLanguageMode(.v5)]),
+        .testTarget(name: "WordPressSharedObjCTests", dependencies: [.target(name: "WordPressShared"), .target(name: "WordPressSharedObjCUI"), .target(name: "WordPressTesting")], swiftSettings: [.swiftLanguageMode(.v5)]),
+        .testTarget(name: "WordPressUIUnitTests", dependencies: [.target(name: "WordPressUI"), .target(name: "WordPressSharedUI")], swiftSettings: [.swiftLanguageMode(.v5)]),
         .testTarget(name: "WordPressCoreTests", dependencies: [.target(name: "WordPressCore")]),
         .testTarget(name: "WordPressIntelligenceTests", dependencies: [.target(name: "WordPressIntelligence")])
     ]
